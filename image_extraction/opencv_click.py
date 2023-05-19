@@ -26,7 +26,20 @@ def init() -> None:
 
     cv2.namedWindow(WINDOW_NAME)
 
-    cv2.setMouseCallback(WINDOW_NAME, mouse_callback)
+def sort_markers(points: List[List[float]]) -> np.ndarray:
+    """
+    Orders points in list counterclockwise, starting from bottom left corner.
+
+    This is needed to ensure the right orientation of the transformed image.
+
+    Args:
+        points: Unsorted list of four coordinates [x_position, y_position]
+
+    Returns:
+        Counterclockwise sorted list of point, starting from bottom left
+    """
+    pts = perspective.order_points(np.array(points))
+    return pts
 
 
 def transform() -> None:
