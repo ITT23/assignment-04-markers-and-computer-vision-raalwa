@@ -15,8 +15,9 @@ def check_output_destination(path: str):
     if valid_path.is_dir():
         raise argparse.ArgumentTypeError("Please specify filename")
     if valid_path.exists():
-        raise argparse.ArgumentTypeError(f"The file '{valid_path.name}' already exists")
-    # TODO: check file ending
+    if valid_path.suffix not in ['.png', '.jpg']:
+        raise argparse.ArgumentTypeError(
+            "The output file has to be either .JPG or .PNG")
     return path
 
 parser = argparse.ArgumentParser()
