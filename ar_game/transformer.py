@@ -1,5 +1,7 @@
 """
-This module returns a tranformed frame from the webcam
+This module returns transformed frames from the webcam
+
+Frames are warped in perspective
 """
 import cv2 as cv
 import numpy as np
@@ -10,6 +12,12 @@ import pyglet
 
 class Transformer:
     def __init__(self, capture_channel: int):
+        """
+        Initializes webcam capture
+
+        Args:
+            capture_channel: source of webcam feed
+        """
         self.aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_6X6_250)
         self.aruco_params = aruco.DetectorParameters()
 
@@ -18,6 +26,14 @@ class Transformer:
         self.WINDOW_HEIGHT = int(self.cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 
     def get_transformed_image(self):
+        """
+        Performs warp perspective transformation on webcam frame
+
+        Returns:
+            transformed frame in pyglet.image.ImageData format
+
+            None if less than 4 AruCo markers are detected
+        """
         ret, frame = self.cap.read()
 
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -54,16 +70,23 @@ class Transformer:
         else:
             return None
 
-    def get_colission(self, image_one):
-        # convert byte to PIL Image
-        image_one_cv = np.array(Image.frombytes('RGB', (self.WINDOW_WIDTH, self.WINDOW_HEIGHT), image_one))
+    def get_finger_position(self, canvas_state):
+        """
+        Detects finger position on canvas.
 
-        img_one_grey = cv.cvtColor(image_one_cv, cv.COLOR_RGB2GRAY)
+        Detection works by converting image to gray and using an adaptive threshold to detect finger shape
 
-        adaptive = cv.adaptiveThreshold(img_one_grey, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 11, 2)
+        Returns:
+            np.array[][] with size of webcam frame, '0' for finger position '255' for empty space
+        """
+        canvas_state_cv = np.array(Image.frombytes('RGB', (self.WINDOW_WIDTH, self.WINDOW_HEIGHT), canvas_state))
 
-        _, img_one_thresh = cv.threshold(img_one_grey, 110, 255, cv.THRESH_BINARY)
+        canvas_state_grey = cv.cvtColor(canvas_state_cv, cv.COLOR_RGB2GRAY)
 
-        img_one_thresh = np.flip(img_one_thresh, 0)
+        adaptive = cv.adaptiveThreshold(canvas_state_grey, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 11, 2)
 
-        return img_one_thresh
+        _, canvas_state_thresh = cv.threshold(canvas_state_grey, 110, 255, cv.THRESH_BINARY)
+
+        canvas_state_thresh = np.flip(canvas_state_thresh, 0)
+
+        return canvas_state_thresh
