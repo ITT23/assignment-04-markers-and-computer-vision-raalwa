@@ -64,4 +64,6 @@ class Transformer:
 
         _, img_one_thresh = cv.threshold(img_one_grey, 110, 255, cv.THRESH_BINARY)
 
+        img_one_thresh = np.flip(img_one_thresh, 0)
+
         return img_one_thresh

@@ -4,6 +4,7 @@ from transformer import Transformer
 import config
 from PIL import Image
 import numpy as np
+from obstacles import Obstacles
 
 background_image = pyglet.resource.image('assets/background.png')
 
@@ -19,13 +20,16 @@ window = pyglet.window.Window(
         height=transformer.WINDOW_HEIGHT)
 
 def init():
-    global game_state, start_screen, window, shape
+    global game_state, start_screen, window, shape, this_obstacles
 
     game_state = config.GameState.INSTRUCTION
 
     start_screen = pyglet.sprite.Sprite(img=background_image)
 
-    shape = pyglet.shapes.Circle(x=10,y=10,radius=50, color = (255,215,0))
+    this_obstacles = Obstacles(x_min_position = int((transformer.WINDOW_WIDTH)*0.2),
+                                x_max_position = int((transformer.WINDOW_WIDTH)*0.8),
+                                max_radius = 30,
+                                y_window = transformer.WINDOW_HEIGHT)
 
     pyglet.app.run()
 
@@ -57,11 +61,13 @@ def on_draw():
         if current_image is not None:
             last_image = current_image
         last_image.blit(0,0,0)
+        this_obstacles.update()
         adaptive_thresh = transformer.get_colission(last_image.get_data())
-        adaptive_thresh = np.flip(adaptive_thresh, 0)
-        if adaptive_thresh[int(shape.y)][int(shape.x)] == 0:
-            print("Collission")
-    shape.draw()
+        is_collission = this_obstacles.check_collissions(adaptive_thresh)
+        if is_collission:
+            game_state = config.GameState.END
+    if game_state == config.GameState.END:
+        start_screen.draw()
 
 
 if __name__ == '__main__':
