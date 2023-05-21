@@ -1,6 +1,6 @@
 # Image extraction
 
-Perform a warp perspective transformation on an image
+Perform a warp perspective transformation on an image.
 
 The user selects four points on the canvas, which are used to transform the image.
 
