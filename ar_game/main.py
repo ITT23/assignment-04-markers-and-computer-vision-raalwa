@@ -41,27 +41,27 @@ def init():
                                             font_size=15,
                                             x = transformer.WINDOW_WIDTH/2,
                                             y = transformer.WINDOW_HEIGHT/2,
-                                            color = (0,0,0,200),
+                                            color = config.TEXT_COLOR,
                                             anchor_x='center')
 
     score_display = pyglet.text.Label(text="",
                                       font_size=20,
                                       x=10,
                                       y=transformer.WINDOW_HEIGHT/2,
-                                      color = config.ACCENT_COLOR)
+                                      color = config.TEXT_COLOR)
 
     end_label = pyglet.text.Label(text = "Press 'R' to restart, 'Q' to quit",
                                             font_size=15,
                                             x = transformer.WINDOW_WIDTH/2,
                                             y = transformer.WINDOW_HEIGHT/3,
-                                            color = (0,0,0,200),
+                                            color = config.TEXT_COLOR,
                                             anchor_x='center')
     
     end_score_label = pyglet.text.Label(text = "",
                                             font_size=50,
                                             x = transformer.WINDOW_WIDTH/2,
                                             y = (2*transformer.WINDOW_HEIGHT)/3,
-                                            color = (0,0,0,200),
+                                            color = config.TEXT_COLOR,
                                             anchor_x='center')
 
     pyglet.app.run()
@@ -107,8 +107,6 @@ def on_draw():
         start_screen.draw()
         end_label.draw()
         end_score_label.draw()
-
-
 
 
 if __name__ == '__main__':

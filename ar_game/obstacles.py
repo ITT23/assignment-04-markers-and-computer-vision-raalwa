@@ -40,7 +40,7 @@ class Obstacles:
         obstacle = pyglet.shapes.Circle(x=random.randint(self.x_min_position, self.x_max_position),
                                         y = self.y_window,
                                         radius = random.randint(10, self.max_radius),
-                                        color = (255,215,0))
+                                        color = config.TEXT_COLOR)
         self.obstacles.append(obstacle)
         self.number_of_obstacles = len(self.obstacles)
 
@@ -51,7 +51,7 @@ class Obstacles:
 
         Returns:
             True if obstacle was missed and game is over
-            
+
             False if game over condition is not met
         """
         for obstacle in self.obstacles:
